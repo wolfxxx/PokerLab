@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PokerLab - Tournament & PokerTV Launcher</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 968px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background: #0f3460;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .panel h2 {
+            color: #ffd700;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .bot-list {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            padding-right: 10px;
+        }
+
+        .bot-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .bot-list::-webkit-scrollbar-track {
+            background: #1a1a2e;
+            border-radius: 4px;
+        }
+
+        .bot-list::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 4px;
+        }
+
+        .bot-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin: 5px 0;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .bot-item:hover {
+            background: rgba(102, 126, 234, 0.2);
+        }
+
+        .bot-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .bot-item label {
+            cursor: pointer;
+            flex: 1;
+            font-size: 1.1em;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn-secondary {
+            background: #2196F3;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #0b7dda;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(33, 150, 243, 0.4);
+        }
+
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #da190b;
+        }
+
+        .btn-warning {
+            background: #ff9800;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #e68900;
+        }
+
+        .btn-purple {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-purple:hover {
+            background: #5568d3;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            background: #1a1a2e;
+            color: white;
+            font-size: 1em;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        .output-section {
+            background: #1a1a2e;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .output-section h2 {
+            color: #ffd700;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .command-box {
+            background: #0a0a1a;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            color: #00ff00;
+            word-break: break-all;
+            position: relative;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+
+        .copy-btn:hover {
+            background: #5568d3;
+        }
+
+        .info-box {
+            background: rgba(102, 126, 234, 0.1);
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .info-box strong {
+            color: #ffd700;
+        }
+
+        .status-message {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            background: rgba(76, 175, 80, 0.2);
+            border-left: 4px solid #4CAF50;
+        }
+
+        .warning-message {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            background: rgba(255, 152, 0, 0.2);
+            border-left: 4px solid #ff9800;
+        }
+
+        .quick-buttons {
+            display: flex;
+            gap: 5px;
+            margin-top: 5px;
+        }
+
+        .quick-btn {
+            padding: 5px 10px;
+            font-size: 0.85em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎰 PokerLab Control Center</h1>
+            <p>Poker Bot Testing Framework - Web Interface</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Left Panel: Bot Selection -->
+            <div class="panel">
+                <h2>Select Bots</h2>
+                <div class="button-group">
+                    <button class="btn btn-purple" onclick="selectAll()">Select All</button>
+                    <button class="btn btn-danger" onclick="deselectAll()">Deselect All</button>
+                </div>
+                <div class="bot-list" id="botList">
+                    <!-- Bots will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Right Panel: Settings -->
+            <div class="panel">
+                <h2>Tournament Settings</h2>
+                <div class="form-group">
+                    <label>Number of Matches:</label>
+                    <input type="number" id="tournamentMatches" value="100" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Random Seed:</label>
+                    <input type="number" id="tournamentSeed" value="12345">
+                </div>
+                <div class="form-group">
+                    <label>Max Hands per Match:</label>
+                    <input type="number" id="tournamentHands" value="2000" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Output File:</label>
+                    <input type="text" id="tournamentOutput" value="results.html">
+                    <div class="quick-buttons">
+                        <button class="btn btn-secondary quick-btn" onclick="setOutput('results.html')">HTML</button>
+                        <button class="btn btn-secondary quick-btn" onclick="setOutput('results.json')">JSON</button>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="generateTournamentCommand()" style="width: 100%; margin-top: 10px;">
+                    🚀 Generate Tournament Command
+                </button>
+
+                <h2 style="margin-top: 30px;">PokerTV Settings</h2>
+                <div class="form-group">
+                    <label>Number of Hands:</label>
+                    <input type="number" id="pokertvHands" value="10" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Random Seed:</label>
+                    <input type="number" id="pokertvSeed" value="42">
+                </div>
+                <div class="form-group">
+                    <label>Decision Timeout (ms):</label>
+                    <input type="number" id="pokertvTimeout" value="500" min="0">
+                </div>
+                <button class="btn btn-secondary" onclick="generatePokerTVCommand()" style="width: 100%; margin-top: 10px;">
+                    📺 Generate PokerTV Command
+                </button>
+            </div>
+        </div>
+
+        <!-- Output Section -->
+        <div class="output-section">
+            <h2>Generated Commands</h2>
+            <div class="info-box">
+                <strong>ℹ️ Note:</strong> This is a web interface for generating commands. To actually run tournaments or PokerTV, 
+                you need to have the PokerLab repository cloned locally and run the commands in your terminal.
+            </div>
+            <div id="commandOutput"></div>
+        </div>
+
+        <!-- Instructions Section -->
+        <div class="output-section">
+            <h2>Quick Start Instructions</h2>
+            <div class="info-box">
+                <strong>1. Clone the Repository:</strong><br>
+                <div class="command-box">
+                    git clone https://github.com/wolfxxx/PokerLab.git<br>
+                    cd PokerLab
+                </div>
+            </div>
+            <div class="info-box">
+                <strong>2. Set Up Python Environment (Optional but Recommended):</strong><br>
+                <div class="command-box">
+                    python -m venv .venv<br><br>
+                    # Windows:<br>
+                    .venv\Scripts\activate<br><br>
+                    # macOS/Linux:<br>
+                    source .venv/bin/activate
+                </div>
+            </div>
+            <div class="info-box">
+                <strong>3. Run the Desktop GUI (Easiest Method):</strong><br>
+                <div class="command-box">
+                    python pokerlab_gui.py
+                </div>
+                <p style="margin-top: 10px;">The desktop GUI provides the same interface as this web page, but can actually launch tournaments and PokerTV directly!</p>
+            </div>
+            <div class="info-box">
+                <strong>4. Or Use Command Line:</strong><br>
+                <p style="margin-top: 10px;">Use the commands generated above, or see the <a href="https://github.com/wolfxxx/PokerLab/blob/main/README.md" target="_blank" style="color: #ffd700;">README</a> for more examples.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // List of available bots (you can update this list)
+        const availableBots = [
+            'advanced_bot',
+            'allin_bot',
+            'call_bot',
+            'random_bot',
+            'uberbot1',
+            'uberbot2',
+            'uberbot3',
+            'uberbot4',
+            'uberbot5',
+            'uberbot6'
+        ];
+
+        // Initialize bot checkboxes
+        function initBots() {
+            const botList = document.getElementById('botList');
+            botList.innerHTML = '';
+            
+            availableBots.forEach(bot => {
+                const botItem = document.createElement('div');
+                botItem.className = 'bot-item';
+                botItem.innerHTML = `
+                    <input type="checkbox" id="bot_${bot}" value="bots/${bot}.py">
+                    <label for="bot_${bot}">${bot}</label>
+                `;
+                botList.appendChild(botItem);
+            });
+        }
+
+        function selectAll() {
+            availableBots.forEach(bot => {
+                document.getElementById(`bot_${bot}`).checked = true;
+            });
+        }
+
+        function deselectAll() {
+            availableBots.forEach(bot => {
+                document.getElementById(`bot_${bot}`).checked = false;
+            });
+        }
+
+        function getSelectedBots() {
+            const selected = [];
+            availableBots.forEach(bot => {
+                const checkbox = document.getElementById(`bot_${bot}`);
+                if (checkbox && checkbox.checked) {
+                    selected.push(checkbox.value);
+                }
+            });
+            return selected;
+        }
+
+        function setOutput(filename) {
+            document.getElementById('tournamentOutput').value = filename;
+        }
+
+        function generateTournamentCommand() {
+            const selected = getSelectedBots();
+            
+            if (selected.length < 2) {
+                showMessage('Please select at least 2 bots for a tournament!', 'warning');
+                return;
+            }
+
+            const matches = document.getElementById('tournamentMatches').value;
+            const seed = document.getElementById('tournamentSeed').value;
+            const hands = document.getElementById('tournamentHands').value;
+            const output = document.getElementById('tournamentOutput').value;
+
+            let cmd = `python tournament.py --bots ${selected.join(' ')} --matches ${matches} --seed ${seed} --hands_cap ${hands}`;
+            
+            if (output && output.trim()) {
+                cmd += ` --output ${output}`;
+            }
+
+            displayCommand('Tournament Command', cmd);
+            showMessage('Tournament command generated! Copy and run it in your terminal.', 'success');
+        }
+
+        function generatePokerTVCommand() {
+            const selected = getSelectedBots();
+            
+            if (selected.length < 2) {
+                showMessage('Please select at least 2 bots for PokerTV!', 'warning');
+                return;
+            }
+
+            const hands = document.getElementById('pokertvHands').value;
+            const seed = document.getElementById('pokertvSeed').value;
+            const timeout = document.getElementById('pokertvTimeout').value;
+
+            const cmd = `python pokertv.py --bots ${selected.join(' ')} --hands_cap ${hands} --seed ${seed} --decision_ms ${timeout}`;
+
+            displayCommand('PokerTV Command', cmd);
+            showMessage('PokerTV command generated! Copy and run it in your terminal.', 'success');
+        }
+
+        function displayCommand(title, command) {
+            const output = document.getElementById('commandOutput');
+            const commandBox = document.createElement('div');
+            commandBox.className = 'command-box';
+            commandBox.style.position = 'relative';
+            commandBox.innerHTML = `
+                <strong style="color: #ffd700; display: block; margin-bottom: 10px;">${title}:</strong>
+                <code id="cmd_${Date.now()}" style="display: block; white-space: pre-wrap;">${command}</code>
+                <button class="copy-btn" onclick="copyCommand('cmd_${Date.now()}')">Copy</button>
+            `;
+            output.insertBefore(commandBox, output.firstChild);
+        }
+
+        function copyCommand(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = element.nextElementSibling;
+                const originalText = btn.textContent;
+                btn.textContent = 'Copied!';
+                btn.style.background = '#4CAF50';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '#667eea';
+                }, 2000);
+            });
+        }
+
+        function showMessage(message, type) {
+            const output = document.getElementById('commandOutput');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = type === 'success' ? 'status-message' : 'warning-message';
+            msgDiv.textContent = message;
+            output.insertBefore(msgDiv, output.firstChild);
+            
+            setTimeout(() => {
+                msgDiv.remove();
+            }, 5000);
+        }
+
+        // Initialize on page load
+        initBots();
+    </script>
+</body>
+</html>

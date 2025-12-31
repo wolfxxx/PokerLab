@@ -24,6 +24,7 @@ results.json
 results.csv
 pokertv_output/
 *.html
+!index.html
 *.json
 *.csv
 
